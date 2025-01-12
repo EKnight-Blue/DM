@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.loicche.todo.R
+import com.loicche.todo.databinding.ItemTaskBinding
 
 
 object TaskCallBack: DiffUtil.ItemCallback<Task>() {
@@ -22,20 +23,17 @@ object TaskCallBack: DiffUtil.ItemCallback<Task>() {
 }
 
 class TaskListAdapter : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(TaskCallBack) {
-    inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        private val titleView: TextView = itemView.findViewById(R.id.task_title)
-        private val descriptionView: TextView = itemView.findViewById(R.id.task_description)
+    inner class TaskViewHolder(itemView: View, private val binding: ItemTaskBinding) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(task: Task) {
-            titleView.text = task.title
-            descriptionView.text = task.description
+            binding.taskTitle.text = task.title
+            binding.taskDescription.text = task.description
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_task, parent, false)
-        return TaskViewHolder(itemView)
+        val binding: ItemTaskBinding = ItemTaskBinding.inflate(LayoutInflater.from(parent.context))
+        return TaskViewHolder(binding.root, binding)
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {

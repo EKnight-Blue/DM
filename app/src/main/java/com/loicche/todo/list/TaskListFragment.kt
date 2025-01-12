@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.loicche.todo.databinding.ActivityMainBinding
 import com.loicche.todo.databinding.FragmentTaskListBinding
 import java.util.UUID
 
@@ -22,8 +21,7 @@ class TaskListFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         adapter.submitList(taskList)
-        val binding = ActivityMainBinding.inflate(inflater)
-        return binding.root
+        return FragmentTaskListBinding.inflate(inflater).root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -31,13 +29,9 @@ class TaskListFragment : Fragment() {
 
         val binding = FragmentTaskListBinding.bind(view)
 
-        val recyclerView = binding.taskViewList
-        recyclerView.adapter = this.adapter
+        binding.taskViewList.adapter = this.adapter
 
-
-        val button = binding.floatingActionButton
-
-        button.setOnClickListener {
+        binding.addTaskButton.setOnClickListener{
             val newTask = Task(id = UUID.randomUUID().toString(), title = "Task ${taskList.size + 1}")
             taskList = taskList + newTask
 
