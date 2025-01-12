@@ -37,6 +37,9 @@ class TaskListAdapter(val listener: TaskListListener) : ListAdapter<Task, TaskLi
             binding.taskEdit.setOnClickListener {
                 listener.onClickEdit(task)
             }
+            binding.taskShare.setOnClickListener {
+                listener.onClickShare(task)
+            }
         }
     }
 

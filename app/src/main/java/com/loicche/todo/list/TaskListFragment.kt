@@ -15,6 +15,7 @@ import java.util.UUID
 interface TaskListListener {
     fun onClickDelete(task: Task)
     fun onClickEdit(task: Task)
+    fun onClickShare(task: Task)
 }
 
 class TaskListFragment : Fragment() {
@@ -36,6 +37,15 @@ class TaskListFragment : Fragment() {
             val intent = Intent(context, DetailActivity::class.java)
             intent.putExtra(TASK_KEY, task)
             editTask.launch(intent)
+        }
+
+        override fun onClickShare(task: Task) {
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, "${task.title}\n${task.description}")
+                type = "text/plain"
+            }
+            startActivity(Intent.createChooser(sendIntent, "Share your task"))
         }
     }
     private val adapter = TaskListAdapter(adapterListener)

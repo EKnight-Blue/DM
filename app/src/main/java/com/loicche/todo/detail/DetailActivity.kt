@@ -1,5 +1,6 @@
 package com.loicche.todo.detail
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -30,7 +31,12 @@ import java.util.UUID
 class DetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val task = intent.getSerializableExtra(TASK_KEY) as Task?
+
+        val task: Task? = if (intent.action == Intent.ACTION_SEND) {
+            Task(id = UUID.randomUUID().toString(), title = "New task", description = intent.getStringExtra(Intent.EXTRA_TITLE) ?: "Task")
+        } else {
+            intent.getSerializableExtra(TASK_KEY) as Task?
+        }
 
         enableEdgeToEdge()
         setContent {
