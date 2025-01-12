@@ -33,8 +33,6 @@ class TaskListFragment : Fragment() {
         const val LIST_KEY = "full list"
     }
 
-    private var taskList: List<Task> = listOf()
-
     val adapterListener : TaskListListener = object : TaskListListener {
         override fun onClickDelete(task: Task) {
             viewModel.remove(task)

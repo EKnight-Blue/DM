@@ -24,6 +24,9 @@ interface UserWebService {
     @Multipart
     @POST("sync/v9/update_avatar")
     suspend fun updateAvatar(@Part avatar: MultipartBody.Part): Response<User>
+
+    @POST("sync/v9/sync")
+    suspend fun update(@Body userUpdate: UserUpdate): Response<Unit>
 }
 
 interface TasksWebService {
