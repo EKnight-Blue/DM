@@ -1,11 +1,8 @@
 package com.loicche.todo.user
 
 import android.content.ContentResolver
-import android.graphics.Bitmap
 import android.net.Uri
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.lifecycleScope
 import com.loicche.todo.data.Api
 import com.loicche.todo.data.User
 import com.loicche.todo.data.UserUpdate
@@ -13,7 +10,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import java.io.File
 
 class UserViewModel: ViewModel() {
     private val userService = Api.userWebService
