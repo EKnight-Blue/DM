@@ -21,13 +21,11 @@ interface TaskListListener {
 class TaskListFragment : Fragment() {
     companion object {
         const val TASK_KEY = "task"
+        const val LIST_KEY = "full list"
     }
 
-    private var taskList = listOf(
-        Task(id = "id_1", title = "Task 1", description = "description 1"),
-        Task(id = "id_2", title = "Task 2"),
-        Task(id = "id_3", title = "Task 3")
-    )
+    private var taskList: List<Task> = listOf()
+
     val adapterListener : TaskListListener = object : TaskListListener {
         override fun onClickDelete(task: Task) {
             taskList = taskList.filterNot { it.id == task.id }
@@ -63,6 +61,11 @@ class TaskListFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        var index: Int = 0
+        while (savedInstanceState?.getSerializable(LIST_KEY + index) != null) {
+            taskList = taskList + savedInstanceState.getSerializable(LIST_KEY + index) as Task
+            index += 1
+        }
         adapter.submitList(taskList)
         return FragmentTaskListBinding.inflate(inflater).root
     }
@@ -77,5 +80,13 @@ class TaskListFragment : Fragment() {
         binding.addTaskButton.setOnClickListener{
             createTask.launch(Intent(context, DetailActivity::class.java))
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        taskList.forEachIndexed({ idx, task ->
+            outState.putSerializable(LIST_KEY + idx, task)
+        })
+        outState.putSerializable(LIST_KEY + taskList.count(), null)
     }
 }
