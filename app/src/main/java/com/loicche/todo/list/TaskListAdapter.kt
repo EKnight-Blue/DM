@@ -23,6 +23,7 @@ object TaskCallBack: DiffUtil.ItemCallback<Task>() {
 
 class TaskListAdapter : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(TaskCallBack) {
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
         private val titleView: TextView = itemView.findViewById(R.id.task_title)
         private val descriptionView: TextView = itemView.findViewById(R.id.task_description)
 
