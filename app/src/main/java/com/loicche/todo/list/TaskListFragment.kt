@@ -14,12 +14,13 @@ class TaskListFragment : Fragment() {
     private val adapter = TaskListAdapter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        adapter.currentList = taskList
         val rootView = inflater.inflate(R.layout.fragment_task_list, container, false)
+        adapter.currentList = taskList
         return rootView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val recyclerView = view.findViewById<RecyclerView>(R.id.task_view_list)
         recyclerView.adapter = this.adapter
     }
