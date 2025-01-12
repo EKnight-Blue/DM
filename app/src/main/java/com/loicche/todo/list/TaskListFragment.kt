@@ -5,15 +5,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import coil3.load
+import com.loicche.todo.R
 import com.loicche.todo.data.Api
 import com.loicche.todo.databinding.FragmentTaskListBinding
 import com.loicche.todo.detail.DetailActivity
+import com.loicche.todo.user.UserActivity
 import kotlinx.coroutines.launch
+import coil3.request.error
 
 
 interface TaskListListener {
@@ -51,6 +56,7 @@ class TaskListFragment : Fragment() {
     }
     private val adapter = TaskListAdapter(adapterListener)
     private var userName: TextView? = null
+    private var userPicture: ImageView? = null
     private val viewModel: TaskListViewModel by viewModels()
 
     val createTask = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -84,6 +90,10 @@ class TaskListFragment : Fragment() {
             createTask.launch(Intent(context, DetailActivity::class.java))
         }
         userName = binding.userName
+        userPicture = binding.userPicture
+        binding.userPicture.setOnClickListener {
+            startActivity(Intent(context, UserActivity::class.java))
+        }
 
         lifecycleScope.launch { // on lance une coroutine car `collect` est `suspend`
             viewModel.tasksStateFlow.collect { newList ->
@@ -105,6 +115,10 @@ class TaskListFragment : Fragment() {
         lifecycleScope.launch {
             val user = Api.userWebService.fetchUser().body()!!
             userName?.text = user.name
+            userPicture?.load(user.avatar) {
+                error(R.drawable.ic_launcher_background) // image par défaut en cas d'erreur
+            }
+
         }
         viewModel.refresh()
 

@@ -9,14 +9,21 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import com.loicche.todo.list.Task
+import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.DELETE
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface UserWebService {
     @GET("/sync/v9/user/")
     suspend fun fetchUser(): Response<User>
+
+    @Multipart
+    @POST("sync/v9/update_avatar")
+    suspend fun updateAvatar(@Part avatar: MultipartBody.Part): Response<User>
 }
 
 interface TasksWebService {
