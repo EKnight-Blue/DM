@@ -23,11 +23,16 @@ object TaskCallBack: DiffUtil.ItemCallback<Task>() {
 }
 
 class TaskListAdapter : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(TaskCallBack) {
-    inner class TaskViewHolder(itemView: View, private val binding: ItemTaskBinding) : RecyclerView.ViewHolder(itemView) {
+    var onClickDelete: (Task) -> Unit = {}
 
+    inner class TaskViewHolder(itemView: View, private val binding: ItemTaskBinding) : RecyclerView.ViewHolder(itemView) {
         fun bind(task: Task) {
             binding.taskTitle.text = task.title
             binding.taskDescription.text = task.description
+
+            binding.taskDelete.setOnClickListener {
+                onClickDelete(task)
+            }
         }
     }
 

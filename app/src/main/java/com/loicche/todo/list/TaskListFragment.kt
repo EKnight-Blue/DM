@@ -30,6 +30,10 @@ class TaskListFragment : Fragment() {
         val binding = FragmentTaskListBinding.bind(view)
 
         binding.taskViewList.adapter = this.adapter
+        this.adapter.onClickDelete=  {task ->
+            this.taskList = this.taskList.filterNot { it.id == task.id }
+            this.adapter.submitList(this.taskList)
+        }
 
         binding.addTaskButton.setOnClickListener{
             val newTask = Task(id = UUID.randomUUID().toString(), title = "Task ${taskList.size + 1}")
@@ -37,6 +41,5 @@ class TaskListFragment : Fragment() {
 
             adapter.submitList(taskList)
         }
-
     }
 }
