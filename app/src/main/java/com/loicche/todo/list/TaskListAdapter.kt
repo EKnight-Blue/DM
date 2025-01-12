@@ -3,12 +3,12 @@ package com.loicche.todo.list
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.loicche.todo.R
 import com.loicche.todo.databinding.ItemTaskBinding
+import com.loicche.todo.list.TaskListFragment.Companion.TASK_KEY
 
 
 object TaskCallBack: DiffUtil.ItemCallback<Task>() {
@@ -24,6 +24,8 @@ object TaskCallBack: DiffUtil.ItemCallback<Task>() {
 
 class TaskListAdapter : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(TaskCallBack) {
     var onClickDelete: (Task) -> Unit = {}
+    var onClickEdit: (Task) -> Unit = {}
+
 
     inner class TaskViewHolder(itemView: View, private val binding: ItemTaskBinding) : RecyclerView.ViewHolder(itemView) {
         fun bind(task: Task) {
@@ -32,6 +34,9 @@ class TaskListAdapter : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(TaskCa
 
             binding.taskDelete.setOnClickListener {
                 onClickDelete(task)
+            }
+            binding.taskEdit.setOnClickListener {
+                onClickEdit(task)
             }
         }
     }

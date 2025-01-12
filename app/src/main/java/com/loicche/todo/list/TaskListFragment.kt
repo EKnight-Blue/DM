@@ -25,9 +25,16 @@ class TaskListFragment : Fragment() {
         Task(id = "id_3", title = "Task 3")
     )
     private val adapter = TaskListAdapter()
+
     val createTask = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         val task = result.data?.getSerializableExtra(TASK_KEY) as Task?
         taskList = taskList + task!!
+        adapter.submitList(taskList)
+    }
+
+    val editTask = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        val task = result.data?.getSerializableExtra(TASK_KEY) as Task?
+        if (task != null) taskList = taskList.map { if (it.id == task.id) task else it }
         adapter.submitList(taskList)
     }
 
@@ -42,17 +49,17 @@ class TaskListFragment : Fragment() {
         val binding = FragmentTaskListBinding.bind(view)
 
         binding.taskViewList.adapter = this.adapter
-        this.adapter.onClickDelete=  {task ->
+        this.adapter.onClickDelete =  {task ->
             this.taskList = this.taskList.filterNot { it.id == task.id }
             this.adapter.submitList(this.taskList)
         }
+        this.adapter.onClickEdit = {task ->
+            val intent = Intent(context, DetailActivity::class.java)
+            intent.putExtra(TASK_KEY, task)
+            editTask.launch(intent)
+        }
 
         binding.addTaskButton.setOnClickListener{
-            /*
-            val newTask = Task(id = UUID.randomUUID().toString(), title = "Task ${taskList.size + 1}")
-            taskList = taskList + newTask
-            adapter.submitList(taskList)
-            */
             createTask.launch(Intent(context, DetailActivity::class.java))
         }
     }

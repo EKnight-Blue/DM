@@ -24,11 +24,13 @@ import androidx.compose.ui.unit.dp
 import com.loicche.todo.detail.ui.theme.TODO_LoicChevalierTheme
 import com.loicche.todo.list.Task
 import com.loicche.todo.list.TaskListFragment
+import com.loicche.todo.list.TaskListFragment.Companion.TASK_KEY
 import java.util.UUID
 
 class DetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val task = intent.getSerializableExtra(TASK_KEY) as Task?
 
         enableEdgeToEdge()
         setContent {
@@ -36,8 +38,9 @@ class DetailActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Detail(
                         modifier = Modifier.padding(innerPadding),
+                        initialTask = task,
                         onValidate = {task ->
-                            intent.putExtra(TaskListFragment.TASK_KEY, task)
+                            intent.putExtra(TASK_KEY, task)
                             setResult(RESULT_OK, intent)
                             finish()
                         }
@@ -49,8 +52,8 @@ class DetailActivity : ComponentActivity() {
 }
 
 @Composable
-fun Detail(modifier: Modifier = Modifier, onValidate: (Task) -> Unit) {
-    var task by remember { mutableStateOf(Task(id = UUID.randomUUID().toString(), title = "New Task !")) }
+fun Detail(modifier: Modifier = Modifier, initialTask: Task?, onValidate: (Task) -> Unit) {
+    var task by remember { mutableStateOf(initialTask ?: Task(id = UUID.randomUUID().toString(), title = "New Task !")) }
     Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Text(
             text = "Task Detail",
@@ -79,6 +82,6 @@ fun Detail(modifier: Modifier = Modifier, onValidate: (Task) -> Unit) {
 @Composable
 fun DetailPreview() {
     TODO_LoicChevalierTheme {
-        Detail(onValidate = {})
+        Detail(initialTask = null, onValidate = {})
     }
 }
