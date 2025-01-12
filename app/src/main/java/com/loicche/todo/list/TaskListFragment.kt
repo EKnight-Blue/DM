@@ -12,7 +12,10 @@ import com.loicche.todo.detail.DetailActivity
 import java.util.UUID
 
 
-
+interface TaskListListener {
+    fun onClickDelete(task: Task)
+    fun onClickEdit(task: Task)
+}
 
 class TaskListFragment : Fragment() {
     companion object {
@@ -24,7 +27,18 @@ class TaskListFragment : Fragment() {
         Task(id = "id_2", title = "Task 2"),
         Task(id = "id_3", title = "Task 3")
     )
-    private val adapter = TaskListAdapter()
+    val adapterListener : TaskListListener = object : TaskListListener {
+        override fun onClickDelete(task: Task) {
+            taskList = taskList.filterNot { it.id == task.id }
+            adapter.submitList(taskList)
+        }
+        override fun onClickEdit(task: Task) {
+            val intent = Intent(context, DetailActivity::class.java)
+            intent.putExtra(TASK_KEY, task)
+            editTask.launch(intent)
+        }
+    }
+    private val adapter = TaskListAdapter(adapterListener)
 
     val createTask = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         val task = result.data?.getSerializableExtra(TASK_KEY) as Task?
@@ -49,15 +63,6 @@ class TaskListFragment : Fragment() {
         val binding = FragmentTaskListBinding.bind(view)
 
         binding.taskViewList.adapter = this.adapter
-        this.adapter.onClickDelete =  {task ->
-            this.taskList = this.taskList.filterNot { it.id == task.id }
-            this.adapter.submitList(this.taskList)
-        }
-        this.adapter.onClickEdit = {task ->
-            val intent = Intent(context, DetailActivity::class.java)
-            intent.putExtra(TASK_KEY, task)
-            editTask.launch(intent)
-        }
 
         binding.addTaskButton.setOnClickListener{
             createTask.launch(Intent(context, DetailActivity::class.java))
